@@ -71,5 +71,27 @@ class <?= $className ?>Base extends <?= '\\' . ltrim($generator->baseClass, '\\'
     {
         <?= $relation[0] . "\n" ?>
     }
+
 <?php endforeach; ?>
+    /**
+    * @return \yii\db\ActiveQuery
+    */
+    public function extraFields()
+    {
+        return [
+        <?php foreach ($relations as $name => $relation): ?>
+            <?php if(lcfirst($name) === 'user') :?>
+                'user' => function(){
+                    $profile = $this->getUser()->one()->getProfile()->one();
+                    if(is_null($profile)){
+                        return [];
+                    }
+                    return $profile->attributes;
+                },
+            <?php else : ?>
+                '<?= lcfirst($name) ?>',
+            <?php endif; ?>
+        <?php endforeach; ?>
+        ];
+    }
 }

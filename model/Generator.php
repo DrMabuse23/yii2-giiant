@@ -10,6 +10,7 @@ namespace schmunk42\giiant\model;
 use yii\gii\CodeFile;
 use yii\helpers\Inflector;
 use Yii;
+use yii\helpers\VarDumper;
 
 /**
  * This generator will generate one or multiple ActiveRecord classes for the specified database table.
@@ -201,13 +202,19 @@ class Generator extends \yii\gii\generators\model\Generator
         $ns = "\\{$this->ns}\\";
         foreach ($relations AS $model => $relInfo) {
             foreach ($relInfo AS $relName => $relData) {
-
+//                VarDumper::dump($relName);
+//                VarDumper::dump($relData);
+//                exit;
                 $relations[$model][$relName][0] = preg_replace(
                     '/(has[A-Za-z]+\()([a-zA-Z]+::)/',
                     '$1__NS__$2',
                     $relations[$model][$relName][0]
                 );
-                $relations[$model][$relName][0] = str_replace('__NS__', $ns, $relations[$model][$relName][0]);
+                if($relName === 'User'){
+                    $relations[$model][$relName][0] = str_replace('__NS__', '\\dektrium\\user\\models\\', $relations[$model][$relName][0]);
+                }else{
+                    $relations[$model][$relName][0] = str_replace('__NS__', $ns, $relations[$model][$relName][0]);
+                }
             }
         }
         return $relations;

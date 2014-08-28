@@ -18,6 +18,7 @@ use yii\db\ActiveQuery;
 use yii\db\ColumnSchema;
 use yii\helpers\Inflector;
 use yii\helpers\Json;
+use yii\helpers\VarDumper;
 
 /**
  * This generator generates an extended version of CRUDs.
@@ -214,6 +215,7 @@ class Generator extends \yii\gii\generators\crud\Generator
         $model     = new $modelClass;
         $stack     = [];
         foreach ($reflector->getMethods() AS $method) {
+
             // look for getters
             if (substr($method->name, 0, 3) !== 'get') {
                 continue;
@@ -232,6 +234,7 @@ class Generator extends \yii\gii\generators\crud\Generator
             }
             // check for relation
             $relation = call_user_func(array($model, $method->name));
+
             if ($relation instanceof yii\db\ActiveQuery) {
                 #var_dump($relation->primaryModel->primaryKey);
                 if ($relation->multiple === false) {
